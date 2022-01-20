@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +20,7 @@ public class CustomerController {
 	
 	@PostMapping("/customer")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	void addCustomer(@RequestBody Customer customer) {
+	void addCustomer(@RequestBody @Valid Customer customer) {
 		customerService.addUser(customer);
 	}
 }
