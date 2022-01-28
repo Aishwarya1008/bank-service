@@ -17,8 +17,6 @@ public class CustomerService {
 	private DepositRepository depositRepository;
 	
 	public void addUser(Customer customer) {
-		Deposit d = customer.getDeposit();
-		depositRepository.save(d);
 		customerRepository.save(customer);
 	}
 

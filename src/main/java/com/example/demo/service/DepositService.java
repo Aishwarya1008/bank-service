@@ -1,10 +1,14 @@
 package com.example.demo.service;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.Customer;
 import com.example.demo.entity.Deposit;
+import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.DepositRepository;
 
@@ -12,23 +16,27 @@ import com.example.demo.repository.DepositRepository;
 public class DepositService {
 
 	@Autowired
-	private DepositRepository depositRepository;
+	private AccountRepository accountRepository;
 	@Autowired
-	private CustomerRepository customerRepository;
+	private DepositRepository depositRepository;
 	
-	public void addDeposit(Deposit deposit, Integer id) {
+	public void addDeposit(Deposit deposit) throws Exception {
+
+		Integer accountNumber = Integer.parseInt(deposit.getAccNumber());
 		
-		Customer customer = customerRepository.findById(id).get();
+		Account account = accountRepository.findById(accountNumber).get();
 		
-		Double old_amt = customer.getDeposit().getAmt();
-		Double final_amt = old_amt + deposit.getAmt();
-		
-		Deposit _deposit = customer.getDeposit();
-		_deposit.setAmt(final_amt);
-		depositRepository.save(_deposit);
-		
-		customer.setDeposit(_deposit);
-		customerRepository.save(customer);
+		if(account != null) {
+			
+			Double old_amt =  account.getInitialDeposit();
+			Double final_amt = old_amt + deposit.getAmt();
+			account.setInitialDeposit(final_amt);
+			account.getDeposits().add(deposit);
+			accountRepository.save(account);
+			
+		} else {
+			throw new Exception();
+		}
 		
 	}
 
